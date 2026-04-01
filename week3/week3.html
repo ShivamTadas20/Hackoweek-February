@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task 2 - Multi Turn Chat</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+        .chatbox {
+            width: 450px;
+            margin: auto;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+        #chat {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: #fafafa;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .user { margin: 8px 0; }
+        .bot { margin: 8px 0; color: blue; }
+    </style>
+</head>
+<body>
+    <div class="chatbox">
+        <h3>Student Helpdesk - Task 2</h3>
+        <div id="chat"></div>
+        <input type="text" id="question" placeholder="Type your message">
+        <button onclick="sendQuestion()">Send</button>
+    </div>
+
+    <script>
+        function sendQuestion() {
+            let question = document.getElementById("question").value;
+            document.getElementById("chat").innerHTML += `<div class='user'><b>You:</b> ${question}</div>`;
+
+            fetch("http://127.0.0.1:5000/chat", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ question: question })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("chat").innerHTML += `<div class='bot'><b>Bot:</b> ${data.reply}</div>`;
+                document.getElementById("question").value = "";
+            });
+        }
+    </script>
+</body>
+</html>
