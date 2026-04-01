@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task 1 - Student Helpdesk</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 30px;
+        }
+        .box {
+            width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        #response {
+            margin-top: 20px;
+            background: #eee;
+            padding: 10px;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h3>Student Helpdesk - Task 1</h3>
+        <input type="text" id="question" placeholder="Ask your question">
+        <button onclick="sendQuestion()">Send</button>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        function sendQuestion() {
+            let question = document.getElementById("question").value;
+
+            fetch("http://127.0.0.1:5000/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question: question })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("response").innerText = data.reply;
+            });
+        }
+    </script>
+</body>
+</html>
