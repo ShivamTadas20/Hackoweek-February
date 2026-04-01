@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Task 5 – Logging & Improvements | SCoT Chatbot Lab</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f8f8f6;
+    color: #1a1a18;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 28px 32px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .page-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 6px;
+  }
+
+  h1 { font-size: 20px; font-weight: 600; color: #1a1a18; margin-bottom: 3px; }
+
+  .subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e0e0da;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat {
+    background: #fff;
+    border: 1px solid #e8e8e2;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .stat-val { font-size: 26px; font-weight: 600; line-height: 1; margin-bottom: 4px; }
+  .stat-lbl { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e8e8e2;
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #bbb; text-align: left; padding: 0 0 8px; border-bottom: 1px solid #eee; }
+  td { padding: 9px 0; border-bottom: 1px solid #f2f2ee; color: #333; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .pill-answered { background: #eaf3de; color: #3b6d11; }
+  .pill-clarify  { background: #faeeda; color: #854f0b; }
+  .pill-suggest  { background: #eeedfe; color: #534ab7; }
+  .pill-escalate { background: #fcebeb; color: #a32d2d; }
+  .pill-web      { background: #e6f1fb; color: #185fa5; }
+  .pill-mobile   { background: #e1f5ee; color: #0f6e56; }
+  .pill-wa       { background: #eaf3de; color: #27500a; }
+
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bar-label { width: 68px; color: #666; flex-shrink: 0; font-size: 12px; text-transform: capitalize; }
+  .bar-track { flex: 1; height: 6px; background: #f0f0ea; border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bar-count { width: 20px; text-align: right; color: #aaa; font-size: 12px; }
+
+  .improve-item {
+    padding: 12px 14px;
+    border: 1px solid #e8e8e2;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+
+  .improve-item:last-child { margin-bottom: 0; }
+
+  .improve-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px; }
+  .improve-title { font-size: 13px; font-weight: 600; color: #222; }
+
+  .ptag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .p-high { background: #fcebeb; color: #a32d2d; }
+  .p-med  { background: #faeeda; color: #854f0b; }
+  .p-low  { background: #eaf3de; color: #3b6d11; }
+
+  .improve-desc { font-size: 12px; color: #666; line-height: 1.5; }
+
+  .export-btn {
+    padding: 4px 12px;
+    border: 1px solid #d8d8d2;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 11px;
+    color: #555;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .export-btn:hover { background: #f5f5f0; }
+
+  @media(max-width: 680px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-tag">Lab task 5 of 5 &nbsp;·&nbsp; ~2 hours</div>
+<h1>Interaction logging & improvement proposals</h1>
+<div class="subtitle">Symbiosis College of Technology, Nagpur &nbsp;·&nbsp; 4th Sem B.Tech CS (AI/ML & Data Science)</div>
+
+<div class="stats-grid">
+  <div class="stat">
+    <div class="stat-val" style="color:#185fa5">12</div>
+    <div class="stat-lbl">Total logs</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" style="color:#3b6d11">7</div>
+    <div class="stat-lbl">Answered</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" style="color:#854f0b">3</div>
+    <div class="stat-lbl">Clarified</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" style="color:#a32d2d">2</div>
+    <div class="stat-lbl">Escalated</div>
+  </div>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-title">
+      <span>Sample interaction log</span>
+      <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28px">#</th>
+          <th>Question</th>
+          <th style="width:80px">Platform</th>
+          <th style="width:80px">Outcome</th>
+        </tr>
+      </thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div class="card">
+      <div class="card-title">Strategy breakdown</div>
+      <div id="stratBars"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Platform breakdown</div>
+      <div id="platBars"></div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Proposed improvements</div>
+
+  <div class="improve-item">
+    <div class="improve-header">
+      <span class="improve-title">Add document request handler</span>
+      <span class="ptag p-high">High</span>
+    </div>
+    <div class="improve-desc">Bonafide certificate and fee receipt questions appear twice in escalation logs. Adding an intent with direct admin portal links would reduce human handoffs.</div>
+  </div>
+
+  <div class="improve-item">
+    <div class="improve-header">
+      <span class="improve-title">Map semesters to exam schedules</span>
+      <span class="ptag p-med">Medium</span>
+    </div>
+    <div class="improve-desc">Many exam queries only include a semester number, not a course code. Pre-loading semester-wise schedules could cut clarify-strategy triggers by ~30%.</div>
+  </div>
+
+  <div class="improve-item">
+    <div class="improve-header">
+      <span class="improve-title">Expand AI/ML specialization FAQ</span>
+      <span class="ptag p-med">Medium</span>
+    </div>
+    <div class="improve-desc">Students frequently ask about specialization subjects. A semester-wise subject list for AI/ML & Data Science would directly answer these without clarification.</div>
+  </div>
+
+  <div class="improve-item">
+    <div class="improve-header">
+      <span class="improve-title">Label unrecognized queries for training</span>
+      <span class="ptag p-low">Low</span>
+    </div>
+    <div class="improve-desc">Unrecognized queries in "suggest" strategy logs are currently unlabeled. Weekly tagging of these would build a dataset for future intent training.</div>
+  </div>
+</div>
+
+<script>
+  const LOGS = [
+    { q: "When is SEM 4 CS301 exam?",   plat: "web",      strat: "answered"  },
+    { q: "What are the fees?",           plat: "mobile",   strat: "clarify"   },
+    { q: "I need my bonafide cert.",     plat: "whatsapp", strat: "escalate"  },
+    { q: "ML401 exam date",              plat: "web",      strat: "answered"  },
+    { q: "When is the exam?",            plat: "mobile",   strat: "clarify"   },
+    { q: "Specialization subjects",      plat: "web",      strat: "answered"  },
+    { q: "My fee challan is wrong",      plat: "whatsapp", strat: "escalate"  },
+    { q: "What is DS301?",               plat: "web",      strat: "answered"  },
+    { q: "Exam schedule 4th year",       plat: "mobile",   strat: "clarify"   },
+    { q: "Best restaurants nearby",      plat: "web",      strat: "suggest"   },
+    { q: "CS401 syllabus",               plat: "web",      strat: "answered"  },
+    { q: "Specialization fee amount",    plat: "mobile",   strat: "answered"  }
+  ];
+
+  (function renderTable() {
+    const tb = document.getElementById("logBody");
+    LOGS.forEach((l, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="color:#ccc;font-size:11px">${String(i+1).padStart(2,"0")}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.q}</td>
+        <td><span class="pill pill-${l.plat}">${l.plat}</span></td>
+        <td><span class="pill pill-${l.strat}">${l.strat}</span></td>`;
+      tb.appendChild(tr);
+    });
+  })();
+
+  function renderBars(id, data, colors) {
+    const max = Math.max(...Object.values(data));
+    const el = document.getElementById(id);
+    el.innerHTML = "";
+    Object.entries(data).forEach(([k, v]) => {
+      const pct = max > 0 ? Math.round(v / max * 100) : 0;
+      el.innerHTML += `
+        <div class="bar-row">
+          <span class="bar-label">${k}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colors[k]||'#ccc'}"></div></div>
+          <span class="bar-count">${v}</span>
+        </div>`;
+    });
+  }
+
+  renderBars("stratBars",
+    { answered: 7, clarify: 3, escalate: 2, suggest: 1 },
+    { answered: "#639922", clarify: "#ba7517", escalate: "#a32d2d", suggest: "#534ab7" }
+  );
+
+  renderBars("platBars",
+    { web: 7, mobile: 4, whatsapp: 2 },
+    { web: "#185fa5", mobile: "#0f6e56", whatsapp: "#3b6d11" }
+  );
+
+  function exportCSV() {
+    const rows = [["#","Question","Platform","Strategy"]];
+    LOGS.forEach((l, i) => rows.push([i+1, `"${l.q}"`, l.plat, l.strat]));
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([rows.map(r=>r.join(",")).join("\n")], {type:"text/csv"}));
+    a.download = "scot_chatbot_logs.csv";
+    a.click();
+  }
+
+  fetch("http://localhost:5000/api/logs")
+    .then(r => r.json())
+    .then(d => { if (d.length) document.querySelectorAll(".stat-val")[0].textContent = d.length; })
+    .catch(() => {});
+</script>
+</body>
+</html>
